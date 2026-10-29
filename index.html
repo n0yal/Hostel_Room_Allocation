@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Hostel Room Allocation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<noscript>This project needs JavaScript to run.</noscript>
+
+<div class="app">
+
+  <!-- ===================== Sidebar ===================== -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-tag" aria-hidden="true"></span>
+      <div>
+        <strong id="hostelName">Hostel</strong>
+        <span>Room allocation</span>
+      </div>
+    </div>
+
+    <nav class="nav" aria-label="Main">
+      <a href="#dashboard" data-page="dashboard">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h7v7H4zM13 4h7v4h-7zM13 11h7v9h-7zM4 14h7v6H4z"/></svg>
+        Dashboard
+      </a>
+      <a href="#rooms" data-page="rooms">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 21V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v17M3 21h18"/><circle cx="14.5" cy="12.5" r=".8"/></svg>
+        Rooms
+      </a>
+      <a href="#students" data-page="students">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 5.2a3 3 0 0 1 0 5.6M18 14.8c1.8.7 3 2.4 3 5.2"/></svg>
+        Students
+      </a>
+      <a href="#allocation" data-page="allocation">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3M14 9l2 2"/></svg>
+        Allocation
+        <span class="badge" id="navBadge" hidden>0</span>
+      </a>
+      <a href="#data" data-page="data">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 4c-2 0-3 1-3 3v2c0 1.2-.6 2-2 3 1.4 1 2 1.8 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1.2.6 2 2 3-1.4 1-2 1.8-2 3v2c0 2-1 3-3 3"/></svg>
+        JSON data
+      </a>
+    </nav>
+
+    <div class="side-foot">
+      <strong id="yearLabel">Academic year</strong>
+      Web Programming microproject
+    </div>
+  </aside>
+
+  <!-- ===================== Pages ===================== -->
+  <main class="main" id="main">
+
+    <!-- Dashboard -->
+    <section class="page" id="page-dashboard" aria-labelledby="dashTitle">
+      <header class="page-head">
+        <div>
+          <h1 id="dashTitle">Dashboard</h1>
+          <p class="muted" id="dashSub"></p>
+        </div>
+        <div class="head-actions">
+          <a class="btn brass" href="#allocation" style="text-decoration:none">Allocate rooms</a>
+        </div>
+      </header>
+
+      <div class="dash-grid">
+        <div class="panel">
+          <h2>Bed occupancy</h2>
+          <div class="occ-body">
+            <div class="donut" id="donut"></div>
+            <div id="blockBars"></div>
+          </div>
+        </div>
+
+        <div class="stats" id="stats"></div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <h2>Waiting for a room</h2>
+            <a class="link" href="#allocation">Open allocation</a>
+          </div>
+          <div class="row-list" id="waitingList"></div>
+        </div>
+
+        <div class="panel">
+          <h2>Recent activity</h2>
+          <ul class="feed" id="activityFeed"></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- Rooms -->
+    <section class="page" id="page-rooms" aria-labelledby="roomsTitle" hidden>
+      <header class="page-head">
+        <div>
+          <h1 id="roomsTitle">Rooms</h1>
+          <p class="muted">Every room by block and floor. A filled bed shows the student's initials.</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn" data-act="open-room-dialog">Add room</button>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <input class="search" id="roomSearch" type="search" placeholder="Search by room number" aria-label="Search rooms">
+        <div class="seg" id="roomBlockSeg" role="group" aria-label="Filter by block"></div>
+        <select class="select" id="roomStatus" aria-label="Filter by status">
+          <option value="all">Any status</option>
+          <option value="vacant">Empty</option>
+          <option value="partial">Has free beds</option>
+          <option value="full">Full</option>
+        </select>
+      </div>
+
+      <div id="roomsBoard"></div>
+    </section>
+
+    <!-- Students -->
+    <section class="page" id="page-students" aria-labelledby="studentsTitle" hidden>
+      <header class="page-head">
+        <div>
+          <h1 id="studentsTitle">Students</h1>
+          <p class="muted">Register students here, then give them a room from the Allocation page.</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn" data-act="open-student-dialog">Add student</button>
+        </div>
+      </header>
+
+      <div class="toolbar">
+        <input class="search" id="studentSearch" type="search" placeholder="Search by name or register number" aria-label="Search students">
+        <div class="seg" id="studentSeg" role="group" aria-label="Filter by room status"></div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Student</th>
+              <th scope="col">Department</th>
+              <th scope="col">Phone</th>
+              <th scope="col">Room</th>
+              <th scope="col"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="studentBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Allocation -->
+    <section class="page" id="page-allocation" aria-labelledby="allocTitle" hidden>
+      <header class="page-head">
+        <div>
+          <h1 id="allocTitle">Allocate rooms</h1>
+          <p class="muted">Choose a student, then a room. Only rooms in the student's block with a free bed are listed, best fit first.</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn ghost" data-act="auto-allocate" id="autoBtn">Auto-allocate everyone</button>
+        </div>
+      </header>
+
+      <div class="alloc-grid">
+        <div class="panel">
+          <h2 id="pendingTitle">Students waiting</h2>
+          <div class="pick-list" id="pendingList"></div>
+        </div>
+        <div class="panel">
+          <h2 id="roomsPickTitle">Available rooms</h2>
+          <div class="pick-list" id="roomPickList"></div>
+          <div class="alloc-foot">
+            <span class="muted" id="allocSummary"></span>
+            <button class="btn brass" id="confirmAlloc" data-act="confirm-allocate" disabled>Allocate room</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- JSON data -->
+    <section class="page" id="page-data" aria-labelledby="dataTitle" hidden>
+      <header class="page-head">
+        <div>
+          <h1 id="dataTitle">JSON data</h1>
+          <p class="muted">All hostel data lives in one JSON object. Read it, edit it, download it or load another file.</p>
+        </div>
+        <div class="head-actions">
+          <button class="btn" data-act="json-download">Download JSON</button>
+          <label class="btn ghost" for="jsonFile" style="display:inline-block">Import JSON</label>
+          <input type="file" id="jsonFile" accept=".json,application/json" class="sr-only">
+        </div>
+      </header>
+
+      <div class="json-grid">
+        <div class="panel">
+          <div class="json-meta">
+            <div class="seg" role="group" aria-label="JSON view">
+              <button type="button" data-act="json-tab" data-val="view" aria-pressed="true">Viewer</button>
+              <button type="button" data-act="json-tab" data-val="edit" aria-pressed="false">Editor</button>
+            </div>
+            <span class="muted" id="jsonStats"></span>
+          </div>
+
+          <div id="jsonViewWrap">
+            <pre class="code" id="jsonView" tabindex="0" aria-label="Hostel data as JSON"></pre>
+            <div class="json-actions" style="margin-top:12px">
+              <button class="btn ghost small" data-act="json-copy">Copy to clipboard</button>
+            </div>
+          </div>
+
+          <div id="jsonEditWrap" hidden>
+            <label class="sr-only" for="jsonEditor">Edit JSON</label>
+            <textarea class="code" id="jsonEditor" spellcheck="false"></textarea>
+            <div class="json-actions" style="margin-top:12px">
+              <button class="btn small" data-act="json-apply">Apply changes</button>
+              <button class="btn ghost small" data-act="json-revert">Discard changes</button>
+            </div>
+            <p class="msg" id="jsonMsg" role="status"></p>
+          </div>
+        </div>
+
+        <div class="panel notes">
+          <h2>How this app uses JSON</h2>
+          <p class="muted">The starting data is the file <b>data.json</b>, read with fetch:</p>
+<pre class="snippet">const res  = await fetch("data.json");
+const data = await res.json();</pre>
+          <p class="muted">Every change is saved in the browser as a JSON string:</p>
+<pre class="snippet">localStorage.setItem(KEY,
+  JSON.stringify(db));</pre>
+          <p class="muted">and turned back into an object on the next visit:</p>
+<pre class="snippet">db = JSON.parse(
+  localStorage.getItem(KEY));</pre>
+          <p class="muted">Try the Editor: remove a comma or a quote, then press Apply changes to see the SyntaxError JSON.parse throws.</p>
+          <div style="margin-top:16px">
+            <button class="btn danger small" data-act="json-reset">Reset to data.json</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===================== Dialogs ===================== -->
+<dialog id="roomDialog" aria-labelledby="roomDlgTitle">
+  <form class="dlg" id="roomForm" novalidate>
+    <h2 id="roomDlgTitle">Add room</h2>
+    <p class="muted">The room appears on the Rooms page right away.</p>
+    <div class="fields">
+      <label class="field">Room number
+        <input type="text" id="roomNumber" placeholder="A-104" maxlength="10" autocomplete="off">
+      </label>
+      <label class="field">Block
+        <select id="roomBlock"><option value="Boys">Boys block</option><option value="Girls">Girls block</option></select>
+      </label>
+      <label class="field">Floor
+        <input type="number" id="roomFloor" min="0" max="10" value="1">
+      </label>
+      <label class="field">Beds
+        <input type="number" id="roomCapacity" min="1" max="6" value="2">
+      </label>
+      <label class="field wide">Room type
+        <select id="roomType"><option>Non-AC</option><option>AC</option></select>
+      </label>
+    </div>
+    <p class="form-error" id="roomError" role="alert"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn ghost" data-act="close-dialog">Cancel</button>
+      <button type="submit" class="btn">Save room</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="studentDialog" aria-labelledby="studentDlgTitle">
+  <form class="dlg" id="studentForm" novalidate>
+    <h2 id="studentDlgTitle">Add student</h2>
+    <p class="muted">New students wait on the Allocation page until a room is chosen.</p>
+    <div class="fields">
+      <label class="field wide">Full name
+        <input type="text" id="stName" placeholder="Anjali Das" autocomplete="off">
+      </label>
+      <label class="field">Register number
+        <input type="text" id="stReg" placeholder="FIT23CS045" maxlength="15" autocomplete="off">
+      </label>
+      <label class="field">Phone
+        <input type="tel" id="stPhone" placeholder="9847012345" maxlength="10" autocomplete="off">
+      </label>
+      <label class="field">Gender
+        <select id="stGender"><option>Male</option><option>Female</option></select>
+      </label>
+      <label class="field">Department
+        <select id="stDept"><option>CSE</option><option>ECE</option><option>EEE</option><option>ME</option><option>CE</option><option>AI&amp;DS</option></select>
+      </label>
+      <label class="field wide">Year
+        <select id="stYear"><option value="1">1st year</option><option value="2">2nd year</option><option value="3">3rd year</option><option value="4">4th year</option></select>
+      </label>
+    </div>
+    <p class="form-error" id="studentError" role="alert"></p>
+    <div class="dlg-actions">
+      <button type="button" class="btn ghost" data-act="close-dialog">Cancel</button>
+      <button type="submit" class="btn">Save student</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="confirmDialog" aria-labelledby="confirmTitle">
+  <form class="dlg" method="dialog">
+    <h2 id="confirmTitle">Are you sure?</h2>
+    <p class="muted" id="confirmText"></p>
+    <div class="dlg-actions">
+      <button class="btn ghost" value="cancel">Cancel</button>
+      <button class="btn danger" value="ok" id="confirmOk">Confirm</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<!-- Fallback copy of data.json: used when the page is opened by double-clicking
+     (browsers block fetch() on file:// pages). Kept in sync with data.json. -->
+<script type="application/json" id="seed-data">{
+  "hostel": {
+    "name": "Sahyadri Hostel",
+    "academicYear": "2026-27",
+    "warden": "Warden"
+  },
+  "rooms": [
+    {
+      "id": 1,
+      "number": "A-101",
+      "block": "Boys",
+      "floor": 1,
+      "capacity": 3,
+      "type": "Non-AC"
+    },
+    {
+      "id": 2,
+      "number": "A-102",
+      "block": "Boys",
+      "floor": 1,
+      "capacity": 2,
+      "type": "Non-AC"
+    },
+    {
+      "id": 3,
+      "number": "A-103",
+      "block": "Boys",
+      "floor": 1,
+      "capacity": 2,
+      "type": "AC"
+    },
+    {
+      "id": 4,
+      "number": "A-201",
+      "block": "Boys",
+      "floor": 2,
+      "capacity": 4,
+      "type": "Non-AC"
+    },
+    {
+      "id": 5,
+      "number": "A-202",
+      "block": "Boys",
+      "floor": 2,
+      "capacity": 3,
+      "type": "AC"
+    },
+    {
+      "id": 6,
+      "number": "A-301",
+      "block": "Boys",
+      "floor": 3,
+      "capacity": 2,
+      "type": "AC"
+    },
+    {
+      "id": 7,
+      "number": "B-101",
+      "block": "Girls",
+      "floor": 1,
+      "capacity": 2,
+      "type": "Non-AC"
+    },
+    {
+      "id": 8,
+      "number": "B-102",
+      "block": "Girls",
+      "floor": 1,
+      "capacity": 3,
+      "type": "Non-AC"
+    },
+    {
+      "id": 9,
+      "number": "B-201",
+      "block": "Girls",
+      "floor": 2,
+      "capacity": 2,
+      "type": "AC"
+    },
+    {
+      "id": 10,
+      "number": "B-202",
+      "block": "Girls",
+      "floor": 2,
+      "capacity": 4,
+      "type": "Non-AC"
+    },
+    {
+      "id": 11,
+      "number": "B-301",
+      "block": "Girls",
+      "floor": 3,
+      "capacity": 3,
+      "type": "AC"
+    },
+    {
+      "id": 12,
+      "number": "B-302",
+      "block": "Girls",
+      "floor": 3,
+      "capacity": 2,
+      "type": "Non-AC"
+    }
+  ],
+  "students": [
+    {
+      "id": 1,
+      "name": "Arjun Nair",
+      "regNo": "FIT23CS001",
+      "gender": "Male",
+      "department": "CSE",
+      "year": 4,
+      "phone": "9847012301",
+      "roomId": 1
+    },
+    {
+      "id": 2,
+      "name": "Rahul Menon",
+      "regNo": "FIT23CS014",
+      "gender": "Male",
+      "department": "CSE",
+      "year": 4,
+      "phone": "9847012302",
+      "roomId": 1
+    },
+    {
+      "id": 3,
+      "name": "Adithya Krishnan",
+      "regNo": "FIT23EC009",
+      "gender": "Male",
+      "department": "ECE",
+      "year": 3,
+      "phone": "9847012303",
+      "roomId": 2
+    },
+    {
+      "id": 4,
+      "name": "Gokul Raj",
+      "regNo": "FIT24EE017",
+      "gender": "Male",
+      "department": "EEE",
+      "year": 3,
+      "phone": "9847012304",
+      "roomId": 4
+    },
+    {
+      "id": 5,
+      "name": "Ashwin Babu",
+      "regNo": "FIT24CE022",
+      "gender": "Male",
+      "department": "CE",
+      "year": 3,
+      "phone": "9847012305",
+      "roomId": 4
+    },
+    {
+      "id": 6,
+      "name": "Sreehari P",
+      "regNo": "FIT25ME030",
+      "gender": "Male",
+      "department": "ME",
+      "year": 2,
+      "phone": "9847012306",
+      "roomId": null
+    },
+    {
+      "id": 7,
+      "name": "Mohammed Faris",
+      "regNo": "FIT26CE041",
+      "gender": "Male",
+      "department": "CE",
+      "year": 1,
+      "phone": "9847012307",
+      "roomId": null
+    },
+    {
+      "id": 8,
+      "name": "Joel Thomas",
+      "regNo": "FIT26AD012",
+      "gender": "Male",
+      "department": "AI&DS",
+      "year": 1,
+      "phone": "9847012308",
+      "roomId": null
+    },
+    {
+      "id": 9,
+      "name": "Anjali Das",
+      "regNo": "FIT23EC022",
+      "gender": "Female",
+      "department": "ECE",
+      "year": 4,
+      "phone": "9946012309",
+      "roomId": 7
+    },
+    {
+      "id": 10,
+      "name": "Meera Joseph",
+      "regNo": "FIT23CS031",
+      "gender": "Female",
+      "department": "CSE",
+      "year": 4,
+      "phone": "9946012310",
+      "roomId": 7
+    },
+    {
+      "id": 11,
+      "name": "Devika Suresh",
+      "regNo": "FIT24EE008",
+      "gender": "Female",
+      "department": "EEE",
+      "year": 3,
+      "phone": "9946012311",
+      "roomId": 8
+    },
+    {
+      "id": 12,
+      "name": "Fathima Nazrin",
+      "regNo": "FIT25CS027",
+      "gender": "Female",
+      "department": "CSE",
+      "year": 2,
+      "phone": "9946012312",
+      "roomId": null
+    },
+    {
+      "id": 13,
+      "name": "Aparna Mohan",
+      "regNo": "FIT25ME015",
+      "gender": "Female",
+      "department": "ME",
+      "year": 2,
+      "phone": "9946012313",
+      "roomId": null
+    },
+    {
+      "id": 14,
+      "name": "Neha Varghese",
+      "regNo": "FIT26AD019",
+      "gender": "Female",
+      "department": "AI&DS",
+      "year": 1,
+      "phone": "9946012314",
+      "roomId": null
+    }
+  ],
+  "activity": [
+    {
+      "text": "Devika Suresh allocated to room B-102",
+      "at": "2026-10-27T10:42:00+05:30"
+    },
+    {
+      "text": "Room B-302 added to the Girls block",
+      "at": "2026-10-26T16:05:00+05:30"
+    },
+    {
+      "text": "Gokul Raj allocated to room A-201",
+      "at": "2026-10-26T11:20:00+05:30"
+    }
+  ]
+}</script>
+
+<script src="script.js"></script>
+</body>
+</html>

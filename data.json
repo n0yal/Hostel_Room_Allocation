@@ -1,0 +1,42 @@
+{
+  "hostel": {
+    "name": "Sahyadri Hostel",
+    "academicYear": "2026-27",
+    "warden": "Warden"
+  },
+  "rooms": [
+    { "id": 1,  "number": "A-101", "block": "Boys",  "floor": 1, "capacity": 3, "type": "Non-AC" },
+    { "id": 2,  "number": "A-102", "block": "Boys",  "floor": 1, "capacity": 2, "type": "Non-AC" },
+    { "id": 3,  "number": "A-103", "block": "Boys",  "floor": 1, "capacity": 2, "type": "AC" },
+    { "id": 4,  "number": "A-201", "block": "Boys",  "floor": 2, "capacity": 4, "type": "Non-AC" },
+    { "id": 5,  "number": "A-202", "block": "Boys",  "floor": 2, "capacity": 3, "type": "AC" },
+    { "id": 6,  "number": "A-301", "block": "Boys",  "floor": 3, "capacity": 2, "type": "AC" },
+    { "id": 7,  "number": "B-101", "block": "Girls", "floor": 1, "capacity": 2, "type": "Non-AC" },
+    { "id": 8,  "number": "B-102", "block": "Girls", "floor": 1, "capacity": 3, "type": "Non-AC" },
+    { "id": 9,  "number": "B-201", "block": "Girls", "floor": 2, "capacity": 2, "type": "AC" },
+    { "id": 10, "number": "B-202", "block": "Girls", "floor": 2, "capacity": 4, "type": "Non-AC" },
+    { "id": 11, "number": "B-301", "block": "Girls", "floor": 3, "capacity": 3, "type": "AC" },
+    { "id": 12, "number": "B-302", "block": "Girls", "floor": 3, "capacity": 2, "type": "Non-AC" }
+  ],
+  "students": [
+    { "id": 1,  "name": "Arjun Nair",       "regNo": "FIT23CS001", "gender": "Male",   "department": "CSE",   "year": 4, "phone": "9847012301", "roomId": 1 },
+    { "id": 2,  "name": "Rahul Menon",      "regNo": "FIT23CS014", "gender": "Male",   "department": "CSE",   "year": 4, "phone": "9847012302", "roomId": 1 },
+    { "id": 3,  "name": "Adithya Krishnan", "regNo": "FIT23EC009", "gender": "Male",   "department": "ECE",   "year": 3, "phone": "9847012303", "roomId": 2 },
+    { "id": 4,  "name": "Gokul Raj",        "regNo": "FIT24EE017", "gender": "Male",   "department": "EEE",   "year": 3, "phone": "9847012304", "roomId": 4 },
+    { "id": 5,  "name": "Ashwin Babu",      "regNo": "FIT24CE022", "gender": "Male",   "department": "CE",    "year": 3, "phone": "9847012305", "roomId": 4 },
+    { "id": 6,  "name": "Sreehari P",       "regNo": "FIT25ME030", "gender": "Male",   "department": "ME",    "year": 2, "phone": "9847012306", "roomId": null },
+    { "id": 7,  "name": "Mohammed Faris",   "regNo": "FIT26CE041", "gender": "Male",   "department": "CE",    "year": 1, "phone": "9847012307", "roomId": null },
+    { "id": 8,  "name": "Joel Thomas",      "regNo": "FIT26AD012", "gender": "Male",   "department": "AI&DS", "year": 1, "phone": "9847012308", "roomId": null },
+    { "id": 9,  "name": "Anjali Das",       "regNo": "FIT23EC022", "gender": "Female", "department": "ECE",   "year": 4, "phone": "9946012309", "roomId": 7 },
+    { "id": 10, "name": "Meera Joseph",     "regNo": "FIT23CS031", "gender": "Female", "department": "CSE",   "year": 4, "phone": "9946012310", "roomId": 7 },
+    { "id": 11, "name": "Devika Suresh",    "regNo": "FIT24EE008", "gender": "Female", "department": "EEE",   "year": 3, "phone": "9946012311", "roomId": 8 },
+    { "id": 12, "name": "Fathima Nazrin",   "regNo": "FIT25CS027", "gender": "Female", "department": "CSE",   "year": 2, "phone": "9946012312", "roomId": null },
+    { "id": 13, "name": "Aparna Mohan",     "regNo": "FIT25ME015", "gender": "Female", "department": "ME",    "year": 2, "phone": "9946012313", "roomId": null },
+    { "id": 14, "name": "Neha Varghese",    "regNo": "FIT26AD019", "gender": "Female", "department": "AI&DS", "year": 1, "phone": "9946012314", "roomId": null }
+  ],
+  "activity": [
+    { "text": "Devika Suresh allocated to room B-102", "at": "2026-10-27T10:42:00+05:30" },
+    { "text": "Room B-302 added to the Girls block",   "at": "2026-10-26T16:05:00+05:30" },
+    { "text": "Gokul Raj allocated to room A-201",     "at": "2026-10-26T11:20:00+05:30" }
+  ]
+}
